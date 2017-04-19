@@ -1,6 +1,6 @@
 module RandomData
 
-    def self.random_paragragh
+    def self.random_paragraph
         sentences = []
         rand(4..6).times do
             sentences << random_sentence
