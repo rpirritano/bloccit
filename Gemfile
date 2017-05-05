@@ -60,6 +60,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.0'
   gem 'rails-controller-testing'
   gem 'shoulda'
+  
 end
 
 
@@ -67,3 +68,6 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'bootstrap-sass'
+
+ # Used for encrypting User passwords
+ gem 'bcrypt'
