@@ -4,7 +4,7 @@ class UsersController < ApplicationController
     end
     
     def create
-        @user = User.new
+        @user = User.new#(params[:user].permit!)
         @user.name = params[:user][:name]
         @user.email = params[:user][:email]
         @user.password = params[:user][:password]
