@@ -26,7 +26,50 @@ RSpec.describe User, type: :model do
      it "should have name and email attributes" do
        expect(user).to have_attributes(name: "Bloccit User", email: "user@bloccit.com")
      end
-   end
+     # Expect user to respond to role
+     it "responds to role" do
+       expect(user).to respond_to(:role)
+      end
+      # Expected users to respond to admin? Return whether or not user is admin (use ActiveRecord:Enum)
+      it "responds to admin?" do
+        expect(user).to respond_to(:admin?)
+      end
+      # Return whether user is member or not
+      it "responds to member?" do
+        expect(user).to respond_to(:member?)
+      end
+    end
+    
+    describe "roles" do
+      #4 User assignmed role of member by default
+      it "is member by default" do
+        expect(user.role).to eql("member")
+      end
+      # Test members
+      context "member user" do
+        it "returns true for #member?" do
+          expect(user.member?).to be_truthy
+        end
+        
+        it "returns false for #admin?" do
+          expect(user.admin?).to be_falsey
+        end
+      end
+      # Test admin
+      context "admin user" do
+        before do
+          user.admin!
+        end
+        
+        it "returns false for #member?" do
+          expect(user.member?).to be_falsey
+        end
+        
+        it "returns true for #admin?" do
+          expect(user.admin?).to be_truthy
+        end
+      end
+    end
    
    describe "invalid user" do
      let(:user_with_invalid_name) { User.new(name: "", email: "user@bloccit.com") }
