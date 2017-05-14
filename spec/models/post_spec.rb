@@ -16,6 +16,7 @@ RSpec.describe Post, type: :model do
   it { is_expected.to belong_to(:topic) }
   it { is_expected.to belong_to(:user) }
   it { is_expected.to have_many(:comments) }
+  it { is_expected.to have_many(:votes) }
 
   it { is_expected.to validate_presence_of(:title) }
   it { is_expected.to validate_presence_of(:body) }
@@ -28,6 +29,57 @@ RSpec.describe Post, type: :model do
   describe "attributes" do 
     it "has a title, body, and user attribute" do
       expect(post).to have_attributes(title: title, body: body, user: user)
+    end
+  end
+  describe "voting" do
+  #create 3 up votes and 2 down votes  
+    before do
+      3.times { post.votes.create!(value: 1) }
+      2.times { post.votes.create!(value: -1) }
+      @up_votes = post.votes.where(value: 1).count
+      @down_votes = post.votes.where(value: -1).count
+    end
+    #test up_votes returns count of up votes
+    describe "#up_votes" do
+      it "counts the number of votes with value = 1" do
+        expect( post.up_votes ).to eq(@up_votes)
+      end
+    end
+    #test down_votes returns count of down votes
+    describe "#down_votes" do
+      it "counts the number of votes with value = -1" do
+        expect( post.down_votes ).to eq(@down_votes)
+      end
+    end
+    #test that points returns the sum of all votes on the post
+    describe "#points" do
+      it "returns the sum of all down and up votes" do
+        expect( post.points ).to eq(@up_votes - @down_votes)
+      end
+    end
+    
+    describe "#update_rank" do
+      it "calculates the correct rank" do
+        post.update_rank
+        #Determine the age of the post by subtracting a standard time from its created_at time
+        #This makes newer posts start with a higher ranking and decays over time
+        expect(post.rank).to eq (post.points + (post.created_at - Time.new(1970,1,1)) / 1.day.seconds)
+        #Divide the distance in seconds since the epoch by the number of seconds in a day, this gives us the age in days
+        #Add the points (sum of the votes) to the age.  This means wiht the passing of one day will be
+        #equivalent to one down vote
+      end
+ 
+      it "updates the rank when an up vote is created" do
+        old_rank = post.rank
+        post.votes.create!(value: 1)
+        expect(post.rank).to eq (old_rank + 1)
+      end
+ 
+      it "updates the rank when a down vote is created" do
+        old_rank = post.rank
+        post.votes.create!(value: -1)
+        expect(post.rank).to eq (old_rank - 1)
+      end
     end
   end
 end
