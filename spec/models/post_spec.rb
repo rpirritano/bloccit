@@ -17,6 +17,7 @@ RSpec.describe Post, type: :model do
   it { is_expected.to belong_to(:user) }
   it { is_expected.to have_many(:comments) }
   it { is_expected.to have_many(:votes) }
+  it { is_expected.to have_many(:favorites) }
 
   it { is_expected.to validate_presence_of(:title) }
   it { is_expected.to validate_presence_of(:body) }
@@ -34,15 +35,21 @@ RSpec.describe Post, type: :model do
   describe "voting" do
   #create 3 up votes and 2 down votes  
     before do
-      3.times { post.votes.create!(value: 1) }
-      2.times { post.votes.create!(value: -1) }
+      3.times { post.votes.create!(value: 1, user: user) }
+      2.times { post.votes.create!(value: -1, user: user) }
       @up_votes = post.votes.where(value: 1).count
       @down_votes = post.votes.where(value: -1).count
     end
     #test up_votes returns count of up votes
     describe "#up_votes" do
       it "counts the number of votes with value = 1" do
-        expect( post.up_votes ).to eq(@up_votes)
+        #SETUP
+
+        #EXECUTION
+        value = post.up_votes
+        #VALIDATION
+
+        expect( value ).to eq(@up_votes)
       end
     end
     #test down_votes returns count of down votes
@@ -71,13 +78,13 @@ RSpec.describe Post, type: :model do
  
       it "updates the rank when an up vote is created" do
         old_rank = post.rank
-        post.votes.create!(value: 1)
+        post.votes.create!(value: 1, user: user)
         expect(post.rank).to eq (old_rank + 1)
       end
  
       it "updates the rank when a down vote is created" do
         old_rank = post.rank
-        post.votes.create!(value: -1)
+        post.votes.create!(value: -1, user: user)
         expect(post.rank).to eq (old_rank - 1)
       end
     end
