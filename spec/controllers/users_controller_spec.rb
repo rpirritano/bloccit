@@ -10,6 +10,15 @@ RSpec.describe UsersController, type: :controller do
         }
     end
 
+      let(:new_failed_attributes) do
+    {
+      name: "B",
+      email: "blochead@bloc",
+      password: "bd",
+      password_confirmation: "bld"
+    }
+  end
+
     describe "GET new" do
         it "returns http success" do
             get :new

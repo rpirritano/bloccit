@@ -4,6 +4,7 @@ RSpec.describe Vote, type: :model do\
   let(:topic) { create(:topic) }
   let(:user) { create(:user) }
   let(:post) { create(:post) }
+  #let(:vote) { create(:vote) }
   let(:vote) { Vote.create!(value: 1, post: post, user: user) }
  
   it { is_expected.to belong_to(:post) }
@@ -22,6 +23,11 @@ RSpec.describe Vote, type: :model do\
     
     it "#update_post should call update_rank on post " do
       #expect that the vote's post will recieve a call to update_rank
+      
+      # foo = create(:vote, post: post, user: user)
+      # post.update_rank
+      #foo_post = Post.create(user: user, topic: topic, body: "sadlfjasdlkdfjasdlfjasdlfjasdkfljkasd", title: "Adsfasfadsdasf")
+
       expect(post).to receive(:update_rank).at_least(:once)
       vote.save!
     end

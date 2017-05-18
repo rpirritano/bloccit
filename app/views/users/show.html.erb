@@ -21,9 +21,17 @@
    </div>
  </div>
  
- 
- <h2>Posts</h2>
- <%= render @user.posts %>
+ <% if user_has_posts_comments?(@user) %>
+  <h2>Posts</h2>
+ <%= render partial: 'posts/post', locals: {show_pictures: false}, collection: @user.posts %>
  
  <h2>Comments</h2>
  <%= render @user.comments %>
+ <% else %>
+ <h2>
+  <%= @user.name %> has not submitted any posts yet.
+ </h2>
+<% end %>
+<h2>Favorites</h2>
+  <%= render partial: 'posts/post', locals: {show_pictures: true}, collection: @user.favorites.map(&:post) %>
+ 

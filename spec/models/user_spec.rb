@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   
    let(:user) { create(:user) }
+   let(:other_user) { create(:user) }
 
    it { is_expected.to have_many(:posts) }
    it { is_expected.to have_many(:comments) }

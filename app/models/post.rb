@@ -38,4 +38,16 @@ class Post < ApplicationRecord
         new_rank = points + age_in_days
         update_attribute(:rank, new_rank)
     end
+    
+    def create_favorite
+        Favorite.create(post: self, user: self.user)
+        FavoriteMailer.new_post(self).deliver_now
+    end
+  
+  private
+  
+  def create_vote(votes = nil)
+      user.votes.create( value: 1, post: self )
+    end
 end
+
